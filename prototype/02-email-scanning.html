@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Đang đồng bộ email</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px; position:relative; }
+    h1 { font-size:18px; margin-bottom:16px; }
+    .banner { background:#EFF6FF; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:20px; color:var(--primary); }
+    .progress-wrap { background:var(--border); border-radius:8px; height:8px; margin-bottom:12px; overflow:hidden; }
+    .progress-bar { height:100%; background:var(--primary); width:0%; transition:width 0.5s; border-radius:8px; }
+    .status { font-size:14px; color:var(--muted); margin-bottom:20px; min-height:20px; }
+    .email-list { list-style:none; }
+    .email-list li { padding:12px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; font-size:13px; }
+    .email-list li.active { border-color:var(--primary); background:#EFF6FF; }
+    .btn { min-height:44px; padding:12px 20px; border:2px solid var(--border); border-radius:10px; background:#fff; font-size:14px; cursor:pointer; margin-top:16px; }
+    .btn-primary { background:var(--primary); color:#fff; border-color:var(--primary); width:100%; display:none; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S4</strong><br>
+      Transparency khi xử lý — user biết AI đang làm gì trước khi Act. Explicit System→User banner.
+    </div>
+    <h1>Đang đồng bộ email trường</h1>
+    <div class="banner" role="status">AI đang đọc — chưa tạo task nào</div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+    <p class="status" id="statusText" role="status">Đang kết nối...</p>
+    <ul class="email-list" id="emailList">
+      <li id="e1">[CS101] Nộp bài tập 3 trước 25/06</li>
+      <li id="e2">Thông báo nghỉ học MATH201</li>
+      <li id="e3">Newsletter thư viện</li>
+    </ul>
+    <button class="btn" id="cancelBtn" aria-label="Hủy quét">Hủy quét</button>
+    <button class="btn btn-primary" id="viewBtn" data-next="02-task-proposal">Xem đề xuất</button>
+  </div>
+  <script>
+    const statuses = ['Đang kết nối...', 'Đang phân tích 2/5 email...', 'Đang phân tích 4/5 email...', 'Tìm thấy 1 deadline tiềm năng'];
+    const progress = document.getElementById('progress');
+    const statusText = document.getElementById('statusText');
+    const viewBtn = document.getElementById('viewBtn');
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      progress.style.width = Math.min(20 + i * 20, 100) + '%';
+      if (i <= statuses.length) statusText.textContent = statuses[i - 1] || statuses[statuses.length - 1];
+      if (i === 2) document.getElementById('e1').classList.add('active');
+      if (i >= 4) { clearInterval(interval); viewBtn.style.display = 'block'; }
+    }, 1200);
+    viewBtn.addEventListener('click', () => window.location.href = '02-task-proposal.html');
+    document.getElementById('cancelBtn').addEventListener('click', () => window.location.href = '02-week-priority.html');
+  </script>
+</body>
+</html>

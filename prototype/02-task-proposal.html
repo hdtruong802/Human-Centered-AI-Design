@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Đề xuất task</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --ask:#D97706; --fact:#2563EB; --inference:#7C3AED; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 120px; position:relative; }
+    .banner { background:#FEF3C7; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; color:#92400E; }
+    .card { border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; }
+    .card h2 { font-size:16px; margin-bottom:12px; }
+    .field { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:14px; }
+    .badge-fact { font-size:10px; padding:2px 6px; border-radius:4px; background:#DBEAFE; color:var(--fact); }
+    .badge-inference { font-size:10px; padding:2px 6px; border-radius:4px; background:#EDE9FE; color:var(--inference); }
+    .evidence { border:1px solid var(--border); border-radius:10px; margin-bottom:16px; }
+    .evidence summary { padding:12px; font-weight:600; cursor:pointer; background:var(--bg); border-radius:10px; }
+    .evidence-body { padding:12px; font-size:13px; color:var(--muted); }
+    .evidence-body blockquote { border-left:3px solid var(--primary); padding-left:10px; margin:8px 0; font-style:italic; }
+    .actions { display:flex; flex-direction:column; gap:8px; }
+    .btn { min-height:44px; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-source { background:#fff; color:var(--primary); border:2px solid var(--primary); }
+    .btn-accept { background:var(--bg); color:var(--muted); border:1px solid var(--border); }
+    .btn-edit { background:#fff; border:1px solid var(--border); }
+    .btn-reject { background:none; border:none; color:var(--muted); font-size:14px; }
+    .badge-ask { font-size:10px; padding:2px 6px; border-radius:4px; background:#FEF3C7; color:var(--ask); }
+    .edit-panel { display:none; padding:12px; background:var(--bg); border-radius:8px; margin-top:8px; }
+    .edit-panel.show { display:block; }
+    .edit-panel select, .edit-panel input { width:100%; padding:10px; margin:8px 0; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+    .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#1E293B; color:#fff; padding:12px 16px; border-radius:8px; font-size:13px; display:none; z-index:200; max-width:340px; }
+    .toast.show { display:block; animation:fade 3s forwards; }
+    @keyframes fade { 0%,80% { opacity:1; } 100% { opacity:0; } }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:150; align-items:center; justify-content:center; padding:16px; }
+    .modal.show { display:flex; }
+    .modal-content { background:#fff; border-radius:12px; padding:16px; max-width:340px; width:100%; font-size:13px; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S4</strong><br>
+      Email có thể nhầm môn → review + bằng chứng trước khi lưu. [Ask] chấp nhận task.
+    </div>
+    <div class="banner" role="status">AI đề xuất — chưa lưu vào lịch</div>
+    <div class="card">
+      <h2>Nộp Bài tập 3 — CS101 — 25/06</h2>
+      <div class="field"><span>Tên task</span><span class="badge-inference">Suy luận AI</span></div>
+      <div class="field"><span>Môn CS101</span><span class="badge-inference">Suy luận AI</span></div>
+      <div class="field"><span>Deadline 25/06</span><span class="badge-fact">Từ email</span></div>
+    </div>
+    <details class="evidence" open>
+      <summary>Bằng chứng</summary>
+      <div class="evidence-body">
+        <p>Nhận 20/06/2026 · nguyenvana@university.edu</p>
+        <blockquote>"[CS101] Nộp bài tập 3 trước 25/06. Vui lòng nộp qua portal."</blockquote>
+        <button class="btn btn-source" id="viewEmailBtn" style="margin-top:8px;width:100%">Xem email đầy đủ</button>
+      </div>
+    </details>
+    <div class="edit-panel" id="editPanel">
+      <label>Môn học<select id="subjectSelect"><option>CS101</option><option>MATH201</option></select></label>
+      <label>Deadline<input type="date" value="2026-06-25"></label>
+    </div>
+    <div class="actions">
+      <button class="btn btn-accept" id="acceptBtn">Chấp nhận <span class="badge-ask">Ask</span></button>
+      <button class="btn btn-edit" id="editBtn">Sửa</button>
+      <button class="btn btn-reject" id="rejectBtn">Từ chối</button>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="alert">Hệ thống ghi nhận: đề xuất không phù hợp</div>
+  <div class="modal" id="emailModal" role="dialog" aria-label="Email đầy đủ">
+    <div class="modal-content">
+      <h3 style="margin-bottom:8px">[CS101] Nộp bài tập 3</h3>
+      <p style="color:var(--muted);font-size:12px">Từ: nguyenvana@university.edu · 20/06/2026</p>
+      <p style="margin-top:12px">Kính gửi sinh viên, Bài tập 3 môn CS101 cần nộp trước 25/06 qua portal. Trân trọng, Thầy Nguyễn Văn A.</p>
+      <button class="btn btn-source" id="closeModal" style="margin-top:16px;width:100%">Đóng</button>
+    </div>
+  </div>
+  <script>
+    document.getElementById('viewEmailBtn').addEventListener('click', () => document.getElementById('emailModal').classList.add('show'));
+    document.getElementById('closeModal').addEventListener('click', () => document.getElementById('emailModal').classList.remove('show'));
+    document.getElementById('editBtn').addEventListener('click', () => document.getElementById('editPanel').classList.toggle('show'));
+    document.getElementById('acceptBtn').addEventListener('click', () => window.location.href = '02-week-priority.html');
+    document.getElementById('rejectBtn').addEventListener('click', () => {
+      const t = document.getElementById('toast'); t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Soạn email nháp</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --ask:#D97706; --dont:#DC2626; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 120px; position:relative; }
+    h1 { font-size:18px; margin-bottom:8px; }
+    .badge-dont { display:inline-block; font-size:11px; padding:4px 8px; border-radius:6px; background:#FEE2E2; color:var(--dont); font-weight:600; margin-bottom:12px; }
+    .badge-draft { font-size:11px; padding:4px 8px; border-radius:6px; background:var(--bg); color:var(--muted); float:right; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+    .form-group input, .form-group textarea { width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; font-size:14px; font-family:inherit; }
+    .form-group input[readonly] { background:var(--bg); }
+    .form-group textarea { min-height:120px; resize:vertical; }
+    .panel { background:var(--bg); border-radius:8px; padding:12px; font-size:13px; margin-bottom:16px; }
+    .panel a { color:var(--primary); }
+    .checkbox-row { display:flex; align-items:flex-start; gap:8px; font-size:13px; margin-bottom:16px; }
+    .checkbox-row input { margin-top:4px; min-width:18px; min-height:18px; }
+    .actions { display:flex; flex-direction:column; gap:8px; }
+    .btn { min-height:44px; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-primary { background:var(--primary); color:#fff; border:none; }
+    .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+    .btn-secondary { background:#fff; border:1px solid var(--border); }
+    .btn-link { background:none; border:none; color:var(--muted); font-size:14px; }
+    .badge-ask { font-size:10px; padding:2px 6px; border-radius:4px; background:#FEF3C7; color:var(--ask); }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1E293B; color:#fff; padding:12px 16px; border-radius:8px; font-size:13px; display:none; z-index:200; }
+    .toast.show { display:block; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S9</strong><br>
+      Rủi ro quan hệ GV. [Don't Act] gửi; [Ask] copy. Badge Nháp ≠ Đã gửi (implicit system cue).
+    </div>
+    <span class="badge-draft">Nháp — chưa gửi</span>
+    <h1>Soạn email nháp</h1>
+    <div class="badge-dont">AI không gửi email thay bạn — Don't Act</div>
+    <div class="form-group">
+      <label>Đến</label>
+      <input type="email" value="nguyenvana@university.edu" readonly>
+    </div>
+    <div class="form-group">
+      <label>Tiêu đề</label>
+      <input type="text" value="Xin gia hạn Bài tập 3 — CS101">
+    </div>
+    <div class="form-group">
+      <label>Nội dung</label>
+      <textarea id="body">Kính gửi Thầy Nguyễn Văn A,
+
+Em là Minh, sinh viên lớp CS101. Em xin phép được gia hạn nộp Bài tập 3 (deadline 25/06) thêm 2 ngày do lịch thi môn khác trùng.
+
+Em cảm ơn Thầy.
+
+Trân trọng,
+Minh</textarea>
+    </div>
+    <div class="panel">AI dùng: deadline 25/06, môn CS101 · <a href="#">Xem nguồn</a></div>
+    <label class="checkbox-row">
+      <input type="checkbox" id="confirmCheck">
+      <span>Tôi đã đọc và chỉnh sửa nội dung</span>
+    </label>
+    <div class="actions">
+      <button class="btn btn-primary" id="copyBtn" disabled>Sao chép & mở email <span class="badge-ask">Ask</span></button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="flex:1">Lưu nháp</button>
+        <button class="btn btn-link" data-next="04-wrong-deadline">Tiếp demo →</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="alert">Đã sao chép — mở ứng dụng email của bạn để gửi</div>
+  <script>
+    const check = document.getElementById('confirmCheck');
+    const copyBtn = document.getElementById('copyBtn');
+    check.addEventListener('change', () => copyBtn.disabled = !check.checked);
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard?.writeText(document.getElementById('body').value);
+      document.getElementById('toast').classList.add('show');
+      setTimeout(() => document.getElementById('toast').classList.remove('show'), 3000);
+    });
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Xem lại</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --inference:#7C3AED; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 120px; position:relative; }
+    h1 { font-size:18px; margin-bottom:8px; }
+    .banner { background:#EFF6FF; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; color:var(--primary); }
+    .section { margin-bottom:20px; }
+    .section h2 { font-size:14px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--border); }
+    .section.fact h2 { border-color:var(--primary); color:var(--primary); }
+    .section.inference h2 { border-color:var(--inference); color:var(--inference); }
+    .item { display:flex; align-items:flex-start; gap:8px; padding:10px 0; font-size:14px; border-bottom:1px solid var(--border); }
+    .item .warn { color:var(--inference); font-size:11px; }
+    .actions { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
+    .btn { min-height:44px; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-primary { background:var(--primary); color:#fff; border:none; }
+    .btn-undo { background:#fff; border:1px solid var(--border); color:var(--text); }
+    .btn-link { background:none; border:none; color:#DC2626; font-size:14px; }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1E293B; color:#fff; padding:12px 16px; border-radius:8px; font-size:13px; display:none; z-index:200; max-width:340px; }
+    .toast.show { display:block; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>After action</strong><br>
+      Phân tách fact/inference giúp phát hiện lỗi sớm. Implicit User→System khi hoàn tác.
+    </div>
+    <h1>Xem lại những gì AI đã làm</h1>
+    <div class="banner" role="status">2 fact · 2 suy luận — kiểm tra trước khi tin hoàn toàn</div>
+    <div class="section fact">
+      <h2>Đã xác nhận (Fact)</h2>
+      <div class="item">Email nhận 20/06 từ nguyenvana@university.edu</div>
+      <div class="item">Deadline 25/06 ghi trong email</div>
+    </div>
+    <div class="section inference">
+      <h2>Suy luận AI (Inference)</h2>
+      <div class="item">Môn CS101 (từ tiêu đề email) <span class="warn">⚠ Có thể cần kiểm tra</span></div>
+      <div class="item">Ưu tiên cao (dựa tiêu chí deadline) <span class="warn">⚠ Có thể cần kiểm tra</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" data-next="03-draft-email">Tiếp tục</button>
+      <button class="btn btn-undo" id="undoBtn">Hoàn tác tạo task</button>
+      <button class="btn btn-link" data-next="04-wrong-deadline">Báo sai thông tin</button>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="alert">Hệ thống ghi nhận: user hoàn tác — có thể đề xuất chưa phù hợp</div>
+  <script>
+    document.getElementById('undoBtn').addEventListener('click', () => {
+      const t = document.getElementById('toast'); t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    });
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

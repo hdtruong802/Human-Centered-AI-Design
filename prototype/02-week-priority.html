@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Ưu tiên tuần</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --act:#16A34A; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 100px; position:relative; }
+    h1 { font-size:18px; margin-bottom:8px; }
+    .banner { background:#DCFCE7; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; color:#166534; }
+    .badge-act { font-size:10px; padding:2px 6px; border-radius:4px; background:#DCFCE7; color:var(--act); font-weight:600; }
+    .task-list { list-style:none; }
+    .task { display:flex; align-items:center; gap:8px; padding:12px; border:1px solid var(--border); border-radius:10px; margin-bottom:8px; font-size:14px; }
+    .task .rank { font-weight:700; color:var(--primary); min-width:20px; }
+    .task .info { flex:1; }
+    .task .meta { font-size:12px; color:var(--muted); }
+    .task .source { font-size:11px; }
+    .task .source.email::before { content:'📧 '; }
+    .task .source.ai::before { content:'🧠 '; }
+    .task .priority { font-size:11px; padding:2px 6px; border-radius:4px; background:var(--bg); }
+    .task .priority.high { background:#FEE2E2; color:#DC2626; }
+    .controls { display:flex; flex-direction:column; gap:4px; }
+    .controls button { width:28px; height:28px; border:1px solid var(--border); background:#fff; border-radius:4px; cursor:pointer; font-size:12px; }
+    .criteria { border:1px solid var(--border); border-radius:10px; padding:14px; margin:16px 0; }
+    .criteria h2 { font-size:14px; margin-bottom:12px; }
+    .slider-row { margin-bottom:10px; }
+    .slider-row label { font-size:12px; color:var(--muted); display:flex; justify-content:space-between; }
+    .slider-row input[type=range] { width:100%; margin-top:4px; }
+    footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:375px; padding:16px; background:var(--card); border-top:1px solid var(--border); }
+    .btn { width:100%; min-height:44px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-secondary { background:var(--bg); color:var(--muted); margin-top:8px; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    .recovered .task:first-child { animation:highlight 1s; }
+    @keyframes highlight { 0%,100% { background:#fff; } 50% { background:#DCFCE7; } }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone" id="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S2</strong><br>
+      [Act] vì rủi ro thấp, dễ sửa. Explainability sliders + nguồn email/suy luận.
+    </div>
+    <h1>Ưu tiên tuần 22–28/06</h1>
+    <div class="banner" role="status">Đề xuất thứ tự — bạn có thể kéo thả hoặc chỉnh tiêu chí <span class="badge-act">Act</span></div>
+    <ul class="task-list" id="taskList">
+      <li class="task" data-id="1">
+        <span class="rank">1</span>
+        <div class="info"><div>Nộp Bài tập 3 — CS101</div><div class="meta">25/06 · <span class="source email">email</span></div></div>
+        <span class="priority high">Cao</span>
+        <div class="controls"><button aria-label="Lên">↑</button><button aria-label="Xuống">↓</button></div>
+      </li>
+      <li class="task" data-id="2">
+        <span class="rank">2</span>
+        <div class="info"><div>Bài kiểm tra giữa kỳ — MATH201</div><div class="meta">26/06 · <span class="source email">email</span></div></div>
+        <span class="priority high">Cao</span>
+        <div class="controls"><button aria-label="Lên">↑</button><button aria-label="Xuống">↓</button></div>
+      </li>
+      <li class="task" data-id="3">
+        <span class="rank">3</span>
+        <div class="info"><div>Đọc chương 5 — CS101</div><div class="meta">27/06 · <span class="source ai">suy luận</span></div></div>
+        <span class="priority">TB</span>
+        <div class="controls"><button aria-label="Lên">↑</button><button aria-label="Xuống">↓</button></div>
+      </li>
+      <li class="task" data-id="4">
+        <span class="rank">4</span>
+        <div class="info"><div>Bài tập nhóm — ENG102</div><div class="meta">28/06 · <span class="source ai">suy luận</span></div></div>
+        <span class="priority">Thấp</span>
+        <div class="controls"><button aria-label="Lên">↑</button><button aria-label="Xuống">↓</button></div>
+      </li>
+    </ul>
+    <div class="criteria">
+      <h2>Tiêu chí ưu tiên</h2>
+      <div class="slider-row"><label><span>Deadline gần</span><span>40%</span></label><input type="range" value="40" min="0" max="100" aria-label="Deadline gần"></div>
+      <div class="slider-row"><label><span>Trọng số môn</span><span>30%</span></label><input type="range" value="30" min="0" max="100" aria-label="Trọng số môn"></div>
+      <div class="slider-row"><label><span>Độ khó ước tính</span><span>30%</span></label><input type="range" value="30" min="0" max="100" aria-label="Độ khó"></div>
+    </div>
+    <footer>
+      <button class="btn btn-primary" data-next="03-review-facts">Áp dụng <span class="badge-act">Act</span></button>
+      <button class="btn btn-secondary">Đặt lại mặc định</button>
+    </footer>
+  </div>
+  <script>
+    if (new URLSearchParams(location.search).get('recovered') === '1') {
+      document.getElementById('phone').classList.add('recovered');
+      const list = document.getElementById('taskList');
+      const t2 = list.querySelector('[data-id="2"]');
+      list.insertBefore(t2, list.firstChild);
+      list.querySelectorAll('.task').forEach((t, i) => t.querySelector('.rank').textContent = i + 1);
+      const t1info = list.querySelector('[data-id="1"] .info div');
+      t1info.textContent = 'Nộp Bài tập 3 — MATH201';
+    }
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+    document.querySelectorAll('.controls button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const task = btn.closest('.task');
+        const list = task.parentElement;
+        if (btn.textContent === '↑' && task.previousElementSibling) list.insertBefore(task, task.previousElementSibling);
+        if (btn.textContent === '↓' && task.nextElementSibling) list.insertBefore(task.nextElementSibling, task);
+        list.querySelectorAll('.task').forEach((t, i) => t.querySelector('.rank').textContent = i + 1);
+      });
+    });
+  </script>
+</body>
+</html>

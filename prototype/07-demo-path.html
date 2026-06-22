@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Demo Path (5 phút)</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#0F172A; --bar:#1E293B; --text:#F8FAFC; --muted:#94A3B8; --border:#334155; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    .top-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--bar); border-bottom:1px solid var(--border); flex-shrink:0; }
+    .top-bar h1 { font-size:15px; }
+    .timer { font-variant-numeric:tabular-nums; font-size:18px; font-weight:700; color:#38BDF8; }
+    .script-label { font-size:12px; color:var(--muted); max-width:200px; text-align:right; }
+    .main { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:16px; overflow:hidden; }
+    .phone-frame { width:375px; max-width:100%; height:calc(100vh - 140px); background:#fff; border-radius:24px; overflow:hidden; box-shadow:0 25px 50px rgba(0,0,0,0.4); border:4px solid #334155; }
+    .phone-frame iframe { width:100%; height:100%; border:none; }
+    .drawer-toggle { background:none; border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:8px; cursor:pointer; font-size:13px; min-height:44px; }
+    .drawer { position:fixed; top:0; left:-280px; width:280px; height:100%; background:var(--bar); border-right:1px solid var(--border); z-index:200; transition:left 0.3s; overflow-y:auto; padding:16px; }
+    .drawer.open { left:0; }
+    .drawer h2 { font-size:14px; margin-bottom:12px; }
+    .drawer button { display:block; width:100%; text-align:left; padding:10px 12px; margin-bottom:4px; background:transparent; border:1px solid transparent; border-radius:8px; color:var(--text); font-size:13px; cursor:pointer; min-height:44px; }
+    .drawer button:hover, .drawer button.active { background:var(--border); border-color:var(--primary); }
+    .drawer .phase { font-size:10px; color:var(--muted); padding:8px 0 4px; text-transform:uppercase; }
+    .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:150; }
+    .overlay.show { display:block; }
+    .bottom-bar { display:flex; gap:8px; padding:12px 16px; background:var(--bar); border-top:1px solid var(--border); flex-shrink:0; }
+    .bottom-bar button { flex:1; min-height:48px; border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; }
+    .btn-prev { background:var(--border); color:var(--text); }
+    .btn-next { background:var(--primary); color:#fff; }
+    .btn-demo { background:#16A34A; color:#fff; flex:1.5; }
+    .progress-dots { display:flex; justify-content:center; gap:4px; padding:6px; background:var(--bar); }
+    .dot { width:6px; height:6px; border-radius:50%; background:var(--border); }
+    .dot.active { background:#38BDF8; width:16px; border-radius:3px; }
+    :focus-visible { outline:2px solid #38BDF8; outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <nav class="drawer" id="drawer" aria-label="Danh sách màn">
+    <h2>Jump to screen</h2>
+    <div class="phase">Overview</div>
+    <button data-screen="0">00 — Flow map</button>
+    <div class="phase">Onboarding</div>
+    <button data-screen="1">01 — Onboarding S0</button>
+    <button data-screen="2">01b — Kết nối dữ liệu S1</button>
+    <div class="phase">During</div>
+    <button data-screen="3">02 — Đang đọc email S4</button>
+    <button data-screen="4">02 — Đề xuất task S4</button>
+    <button data-screen="5">02 — Ưu tiên tuần S2</button>
+    <div class="phase">After / Agency</div>
+    <button data-screen="6">03 — Review fact/inference</button>
+    <button data-screen="7">03 — Soạn email S9</button>
+    <div class="phase">Failure & Recovery</div>
+    <button data-screen="8">04 — Gán nhầm S6</button>
+    <button data-screen="9">04 — Báo lỗi</button>
+    <button data-screen="10">04 — Recovery</button>
+    <div class="phase">Feedback & Rationale</div>
+    <button data-screen="11">05 — Ma trận 2×2</button>
+    <button data-screen="12">06 — Rationale</button>
+  </nav>
+  <header class="top-bar">
+    <button class="drawer-toggle" id="drawerBtn" aria-label="Mở menu màn">☰ Màn</button>
+    <div>
+      <div class="timer" id="timer" aria-live="polite">0:00</div>
+    </div>
+    <div class="script-label" id="scriptLabel">Flow map</div>
+  </header>
+  <div class="progress-dots" id="progressDots"></div>
+  <main class="main">
+    <div class="phone-frame">
+      <iframe id="screenFrame" title="StudyMate AI prototype screen" src="00-flow-map.html"></iframe>
+    </div>
+  </main>
+  <footer class="bottom-bar">
+    <button class="btn-prev" id="prevBtn" aria-label="Màn trước">← Trước</button>
+    <button class="btn-demo" id="demoBtn">Demo tiếp theo →</button>
+    <button class="btn-next" id="nextBtn" aria-label="Màn sau">Sau →</button>
+  </footer>
+  <script>
+    const screens = [
+      { file: '00-flow-map.html', label: '0:00 — Flow map', time: 0 },
+      { file: '01-onboarding.html', label: '0:30 — Onboarding S0', time: 30 },
+      { file: '01b-connect-data.html', label: '0:45 — Kết nối dữ liệu S1', time: 45 },
+      { file: '02-email-scanning.html', label: '1:15 — Đang đọc email', time: 75 },
+      { file: '02-task-proposal.html', label: '1:30 — Đề xuất task', time: 90 },
+      { file: '02-week-priority.html', label: '1:45 — Ưu tiên tuần', time: 105 },
+      { file: '03-review-facts.html', label: '2:15 — Review fact/inference', time: 135 },
+      { file: '03-draft-email.html', label: '2:30 — Soạn email S9', time: 150 },
+      { file: '04-wrong-deadline.html', label: '2:45 — Gán nhầm môn', time: 165 },
+      { file: '04-error-feedback.html', label: '3:00 — Báo lỗi', time: 180 },
+      { file: '04-recovery.html', label: '3:15 — Recovery', time: 195 },
+      { file: '05-feedback-matrix.html', label: '3:45 — Feedback 2×2', time: 225 },
+      { file: '06-rationale.html', label: '4:30 — Rationale', time: 270 }
+    ];
+    let current = 0;
+    let elapsedSec = 0;
+    let timerInterval = null;
+    const frame = document.getElementById('screenFrame');
+    const timerEl = document.getElementById('timer');
+    const scriptLabel = document.getElementById('scriptLabel');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return m + ':' + String(s).padStart(2, '0');
+    }
+
+    function renderDots() {
+      const container = document.getElementById('progressDots');
+      container.innerHTML = screens.map((_, i) =>
+        `<div class="dot${i === current ? ' active' : ''}" aria-hidden="true"></div>`
+      ).join('');
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= screens.length) return;
+      current = index;
+      frame.src = screens[current].file;
+      scriptLabel.textContent = screens[current].label;
+      elapsedSec = screens[current].time;
+      timerEl.textContent = formatTime(elapsedSec);
+      renderDots();
+      drawer.querySelectorAll('button[data-screen]').forEach(btn => {
+        btn.classList.toggle('active', +btn.dataset.screen === current);
+      });
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        elapsedSec++;
+        timerEl.textContent = formatTime(elapsedSec);
+      }, 1000);
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => { startTimer(); goTo(current + 1); });
+    document.getElementById('demoBtn').addEventListener('click', () => { startTimer(); goTo(current + 1); });
+
+    document.getElementById('drawerBtn').addEventListener('click', () => {
+      drawer.classList.add('open');
+      overlay.classList.add('show');
+    });
+    overlay.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      overlay.classList.remove('show');
+    });
+    drawer.querySelectorAll('button[data-screen]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        startTimer();
+        goTo(+btn.dataset.screen);
+        drawer.classList.remove('open');
+        overlay.classList.remove('show');
+      });
+    });
+
+    renderDots();
+  </script>
+</body>
+</html>

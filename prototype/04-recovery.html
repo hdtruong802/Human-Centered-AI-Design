@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Khôi phục</title>
+  <style>
+    :root { --primary:#2563EB; --success:#16A34A; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --act:#16A34A; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 120px; position:relative; }
+    .steps { display:flex; gap:8px; margin-bottom:20px; }
+    .step-dot { flex:1; height:4px; background:var(--border); border-radius:2px; }
+    .step-dot.done { background:var(--primary); }
+    .step-dot.active { background:var(--success); }
+    .step-panel { display:none; }
+    .step-panel.active { display:block; }
+    .confirm-box { background:#DCFCE7; border:1px solid #86EFAC; border-radius:10px; padding:14px; margin-bottom:16px; font-size:14px; }
+    .change { display:flex; align-items:center; gap:8px; margin:8px 0; font-size:14px; }
+    .change .arrow { color:var(--success); font-weight:bold; }
+    .fix-list { list-style:none; }
+    .fix-list li { display:flex; align-items:center; gap:10px; padding:12px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; font-size:14px; }
+    .fix-list input { min-width:18px; min-height:18px; }
+    .remember { background:var(--bg); padding:14px; border-radius:10px; margin:16px 0; font-size:13px; }
+    .remember label { display:flex; align-items:flex-start; gap:8px; cursor:pointer; }
+    .remember small { display:block; color:var(--muted); margin-top:8px; margin-left:26px; }
+    .btn { min-height:44px; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; width:100%; margin-top:8px; }
+    .btn-primary { background:var(--primary); color:#fff; border:none; }
+    .btn-success { background:var(--success); color:#fff; border:none; }
+    .badge-act { font-size:10px; padding:2px 6px; border-radius:4px; background:#DCFCE7; color:var(--act); }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#166534; color:#fff; padding:12px 16px; border-radius:8px; font-size:13px; display:none; z-index:200; }
+    .toast.show { display:block; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S6 recovery</strong><br>
+      Vòng đầy đủ: xác nhận → sửa → tiếp tục mục tiêu. Không dead-end "đã ghi nhận".
+    </div>
+    <div class="steps">
+      <div class="step-dot done" id="sd1"></div>
+      <div class="step-dot active" id="sd2"></div>
+      <div class="step-dot" id="sd3"></div>
+    </div>
+    <div class="step-panel active" id="panel1">
+      <h2 style="font-size:16px;margin-bottom:12px">Bước 1 — Xác nhận hiểu</h2>
+      <div class="confirm-box" role="status">
+        Mình hiểu: deadline này thuộc <strong>MATH201</strong>, không phải CS101.
+      </div>
+      <div class="change"><span>CS101</span><span class="arrow">→</span><span><strong>MATH201</strong></span></div>
+      <div class="change"><span>Nguyễn Văn A</span><span class="arrow">→</span><span><strong>Trần Thị B</strong></span></div>
+      <button class="btn btn-primary" id="toStep2">Tiếp tục</button>
+    </div>
+    <div class="step-panel" id="panel2">
+      <h2 style="font-size:16px;margin-bottom:12px">Bước 2 — Đề xuất khôi phục <span class="badge-act">Act</span></h2>
+      <ul class="fix-list">
+        <li><input type="checkbox" checked> Di chuyển task sang MATH201</li>
+        <li><input type="checkbox" checked> Cập nhật ưu tiên tuần (MATH201 lên #1)</li>
+        <li><input type="checkbox"> Hoàn tác task CS101 trùng lặp</li>
+      </ul>
+      <button class="btn btn-primary" id="toStep3">Áp dụng sửa</button>
+    </div>
+    <div class="step-panel" id="panel3">
+      <h2 style="font-size:16px;margin-bottom:12px">Bước 3 — Ghi nhớ</h2>
+      <div class="remember">
+        <label><input type="checkbox" checked> Ghi nhớ: email từ tranthib@university.edu thường là MATH201</label>
+        <small>Bạn có thể xóa ghi nhớ trong Cài đặt</small>
+      </div>
+      <button class="btn btn-success" id="finishBtn">Hoàn tất</button>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="alert">Đã sửa · Ưu tiên tuần cập nhật</div>
+  <script>
+    document.getElementById('toStep2').addEventListener('click', () => {
+      document.getElementById('panel1').classList.remove('active');
+      document.getElementById('panel2').classList.add('active');
+      document.getElementById('sd2').classList.add('done');
+      document.getElementById('sd3').classList.add('active');
+    });
+    document.getElementById('toStep3').addEventListener('click', () => {
+      document.getElementById('panel2').classList.remove('active');
+      document.getElementById('panel3').classList.add('active');
+      document.getElementById('sd3').classList.add('done');
+    });
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      document.getElementById('toast').classList.add('show');
+      setTimeout(() => window.location.href = '02-week-priority.html?recovered=1', 1500);
+    });
+  </script>
+</body>
+</html>

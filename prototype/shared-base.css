@@ -1,0 +1,21 @@
+/* Reference only — each HTML file inlines these styles for self-contained output */
+:root {
+  --primary: #2563EB;
+  --primary-light: #EFF6FF;
+  --danger: #DC2626;
+  --danger-light: #FEF2F2;
+  --success: #16A34A;
+  --warning: #D97706;
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --text: #1E293B;
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --rationale-bg: #FFF9E6;
+  --rationale-border: #FCD34D;
+  --act: #16A34A;
+  --ask: #D97706;
+  --dont: #DC2626;
+  --inference: #7C3AED;
+  --fact: #2563EB;
+}

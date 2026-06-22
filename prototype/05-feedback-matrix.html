@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Feedback 2×2</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 100px; position:relative; }
+    h1 { font-size:18px; margin-bottom:16px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .grid-header { font-size:10px; color:var(--muted); text-align:center; padding:4px; }
+    .cell { border:1px solid var(--border); border-radius:10px; padding:10px; font-size:11px; min-height:120px; }
+    .cell h3 { font-size:11px; margin-bottom:6px; color:var(--primary); }
+    .cell p { color:var(--muted); margin-bottom:8px; line-height:1.4; }
+    .mini-mock { background:var(--bg); border-radius:6px; padding:6px; margin-bottom:6px; font-size:10px; }
+    .mini-banner { background:#FEF3C7; padding:4px; border-radius:4px; font-size:9px; }
+    .mini-form { border:1px solid var(--border); padding:4px; border-radius:4px; }
+    .mini-toast { background:#1E293B; color:#fff; padding:4px; border-radius:4px; font-size:9px; }
+    .mini-btn { display:inline-block; border:1px solid var(--primary); padding:2px 6px; border-radius:4px; font-size:9px; margin-right:4px; }
+    .mini-btn.secondary { border-color:var(--border); color:var(--muted); }
+    .link { color:var(--primary); font-size:10px; background:none; border:none; cursor:pointer; text-decoration:underline; }
+    footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:375px; padding:16px; background:var(--card); border-top:1px solid var(--border); }
+    .btn { width:100%; min-height:44px; border:none; border-radius:10px; background:var(--primary); color:#fff; font-size:15px; font-weight:600; cursor:pointer; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Feedback 2×2</strong><br>
+      Cần cả 4 ô — không chỉ explicit user feedback. Implicit cues quan trọng bằng banner.
+    </div>
+    <h1>Ma trận Feedback 2×2</h1>
+    <div class="grid">
+      <div class="grid-header"></div>
+      <div class="grid-header">System → User</div>
+      <div class="grid-header">User → System</div>
+      <div class="grid-header">Explicit</div>
+      <div class="cell">
+        <h3>Explicit S→U</h3>
+        <div class="mini-mock"><div class="mini-banner">AI đề xuất — chưa lưu</div></div>
+        <p>Banner trạng thái AI rõ ràng trên mọi màn đề xuất.</p>
+        <button class="link" data-next="02-task-proposal">Xem màn →</button>
+      </div>
+      <div class="cell">
+        <h3>Explicit U→S</h3>
+        <div class="mini-mock"><div class="mini-form">○ Sai môn học</div></div>
+        <p>Form loại lỗi cụ thể, không chỉ thumbs down.</p>
+        <button class="link" data-next="04-error-feedback">Xem màn →</button>
+      </div>
+      <div class="grid-header">Implicit</div>
+      <div class="cell">
+        <h3>Implicit S→U</h3>
+        <div class="mini-mock">
+          <span class="mini-btn">Xem nguồn</span>
+          <span class="mini-btn secondary">Chấp nhận</span>
+        </div>
+        <p>Affordance UI: nút review nổi bật, badge Nháp vs Đã gửi.</p>
+        <button class="link" data-next="02-task-proposal">Xem màn →</button>
+      </div>
+      <div class="cell">
+        <h3>Implicit U→S</h3>
+        <div class="mini-mock"><div class="mini-toast">Ghi nhận: hoàn tác</div></div>
+        <p>Toast khi hoàn tác, từ chối, sửa tay — không cần form.</p>
+        <button class="link" data-next="03-review-facts">Xem màn →</button>
+      </div>
+    </div>
+    <footer>
+      <button class="btn" data-next="06-rationale">Tiếp theo: Design rationale</button>
+    </footer>
+  </div>
+  <script>
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

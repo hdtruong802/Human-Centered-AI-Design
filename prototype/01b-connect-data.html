@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Kết nối dữ liệu</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --ask:#D97706; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 100px; position:relative; }
+    h1 { font-size:20px; margin-bottom:8px; }
+    .banner { background:#EFF6FF; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; color:var(--primary); }
+    section { margin-bottom:20px; }
+    section h2 { font-size:15px; margin-bottom:8px; }
+    ul { padding-left:18px; font-size:14px; color:var(--muted); }
+    .scope { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .scope summary { padding:12px; cursor:pointer; font-weight:600; font-size:14px; background:var(--bg); }
+    .scope-content { padding:12px; font-size:13px; }
+    .scope-content p { margin-bottom:6px; color:var(--muted); }
+    .toggle-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); }
+    .toggle { width:48px; height:28px; background:var(--primary); border-radius:14px; position:relative; cursor:pointer; }
+    .toggle::after { content:''; position:absolute; width:22px; height:22px; background:#fff; border-radius:50%; top:3px; right:3px; }
+    .toggle.off { background:var(--border); }
+    .toggle.off::after { right:auto; left:3px; }
+    .link { color:var(--primary); font-size:13px; }
+    footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:375px; padding:16px; background:var(--card); border-top:1px solid var(--border); }
+    .btn { width:100%; min-height:44px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin-bottom:8px; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-secondary { background:var(--bg); color:var(--muted); }
+    .badge-ask { font-size:10px; padding:2px 6px; border-radius:4px; background:#FEF3C7; color:var(--ask); font-weight:600; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S1</strong><br>
+      Granular consent — không all-or-nothing. [Ask] trước khi đọc email. Rủi ro: đọc nhầm phạm vi.
+    </div>
+    <h1>Kết nối dữ liệu học tập</h1>
+    <div class="banner" role="status">Bạn có thể thu hồi quyền bất cứ lúc nào trong Cài đặt</div>
+    <section>
+      <h2>Lợi ích</h2>
+      <ul>
+        <li>Tự tạo task từ email trường</li>
+        <li>Nhắc deadline kịp thời</li>
+        <li>Gợi ý ưu tiên tuần</li>
+      </ul>
+    </section>
+    <details class="scope" open>
+      <summary>Phạm vi dữ liệu</summary>
+      <div class="scope-content">
+        <p>✓ Email trường (@student.university.edu) — chỉ đọc, không gửi</p>
+        <p>✓ Lịch học — chỉ xem deadline</p>
+        <p>✗ KHÔNG đọc: tin nhắn cá nhân, ảnh, liên hệ</p>
+      </div>
+    </details>
+    <section style="margin-top:16px">
+      <div class="toggle-row">
+        <span>Email trường</span>
+        <div class="toggle" id="emailToggle" role="switch" aria-checked="true" tabindex="0"></div>
+      </div>
+      <div class="toggle-row">
+        <span>Lịch học</span>
+        <div class="toggle" id="calToggle" role="switch" aria-checked="true" tabindex="0"></div>
+      </div>
+    </section>
+    <a href="#" class="link">Chính sách quyền riêng tư</a>
+    <footer>
+      <button class="btn btn-primary" data-next="02-email-scanning">Cho phép kết nối <span class="badge-ask">Ask</span></button>
+      <button class="btn btn-secondary" data-next="02-week-priority">Để sau</button>
+    </footer>
+  </div>
+  <script>
+    document.querySelectorAll('.toggle').forEach(t => {
+      t.addEventListener('click', () => {
+        t.classList.toggle('off');
+        t.setAttribute('aria-checked', !t.classList.contains('off'));
+      });
+    });
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

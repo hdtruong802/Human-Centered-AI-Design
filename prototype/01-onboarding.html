@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Onboarding</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; --ask:#D97706; --dont:#DC2626; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); position:relative; }
+    .top-bar { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }
+    .skip { color:var(--muted); font-size:14px; background:none; border:none; cursor:pointer; min-height:44px; padding:8px; }
+    .banner { background:#EFF6FF; color:var(--primary); padding:10px 16px; font-size:13px; border-bottom:1px solid #BFDBFE; }
+    .step-container { padding:24px 16px 100px; }
+    .step { display:none; }
+    .step.active { display:block; }
+    .step h2 { font-size:20px; margin-bottom:16px; }
+    .step ul { list-style:none; }
+    .step li { padding:10px 0; border-bottom:1px solid var(--border); font-size:15px; display:flex; align-items:flex-start; gap:8px; }
+    .step li::before { content:'✓'; color:var(--primary); font-weight:bold; }
+    .dots { display:flex; justify-content:center; gap:8px; padding:16px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--border); }
+    .dot.active { background:var(--primary); width:24px; border-radius:4px; }
+    .badge-ask,.badge-dont { font-size:10px; padding:2px 6px; border-radius:4px; font-weight:600; white-space:nowrap; }
+    .badge-ask { background:#FEF3C7; color:var(--ask); }
+    .badge-dont { background:#FEE2E2; color:var(--dont); }
+    footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:375px; padding:16px; background:var(--card); border-top:1px solid var(--border); }
+    .btn { width:100%; min-height:44px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-link { background:none; color:var(--muted); margin-top:8px; font-size:14px; }
+    .rationale { position:fixed; top:60px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S0</strong><br>
+      Progressive disclosure 3 bước thay form dài — giảm cognitive load. [Ask] cho mọi kết nối dữ liệu.
+    </div>
+    <div class="top-bar">
+      <strong>StudyMate AI</strong>
+      <button class="skip" data-next="02-week-priority" aria-label="Bỏ qua onboarding">Bỏ qua</button>
+    </div>
+    <div class="banner" role="status">Chưa có dữ liệu học tập — AI chưa thể đề xuất</div>
+    <div class="step-container">
+      <div class="step active" data-step="1">
+        <h2>AI có thể giúp</h2>
+        <ul>
+          <li>Đọc email trường <span class="badge-ask">Ask</span></li>
+          <li>Tạo task tự động <span class="badge-ask">Ask</span></li>
+          <li>Gợi ý ưu tiên tuần</li>
+          <li>Soạn email nháp</li>
+        </ul>
+      </div>
+      <div class="step" data-step="2">
+        <h2>AI không tự làm</h2>
+        <ul>
+          <li>Gửi email thay bạn <span class="badge-dont">Don't Act</span></li>
+          <li>Nộp bài, đăng ký môn</li>
+          <li>Trả lời thay bạn</li>
+        </ul>
+      </div>
+      <div class="step" data-step="3">
+        <h2>Bạn kiểm soát</h2>
+        <ul>
+          <li>Bỏ qua bất cứ lúc nào</li>
+          <li>Thu hồi quyền trong Cài đặt</li>
+          <li>Chỉnh sau khi cần</li>
+        </ul>
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true">
+      <div class="dot active" data-dot="1"></div>
+      <div class="dot" data-dot="2"></div>
+      <div class="dot" data-dot="3"></div>
+    </div>
+    <footer>
+      <button class="btn btn-primary" id="nextBtn">Tiếp tục</button>
+      <button class="btn btn-link" id="connectBtn" style="display:none" data-next="01b-connect-data">Kết nối dữ liệu</button>
+      <button class="btn btn-link" id="exploreBtn" style="display:none" data-next="02-week-priority">Khám phá trước</button>
+    </footer>
+  </div>
+  <script>
+    let step = 1;
+    const steps = document.querySelectorAll('.step');
+    const dots = document.querySelectorAll('.dot');
+    const nextBtn = document.getElementById('nextBtn');
+    const connectBtn = document.getElementById('connectBtn');
+    const exploreBtn = document.getElementById('exploreBtn');
+    function showStep(n) {
+      step = n;
+      steps.forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+      dots.forEach(d => d.classList.toggle('active', +d.dataset.dot === n));
+      if (n === 3) {
+        nextBtn.style.display = 'none';
+        connectBtn.style.display = 'block';
+        exploreBtn.style.display = 'block';
+      } else {
+        nextBtn.style.display = 'block';
+        nextBtn.textContent = n < 3 ? 'Tiếp tục' : 'Kết nối dữ liệu';
+        connectBtn.style.display = 'none';
+        exploreBtn.style.display = 'none';
+      }
+    }
+    nextBtn.addEventListener('click', () => { if (step < 3) showStep(step + 1); else window.location.href = '01b-connect-data.html'; });
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      if (btn.id !== 'nextBtn') btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

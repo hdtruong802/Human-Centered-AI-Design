@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Design Rationale</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --act:#16A34A; --ask:#D97706; --dont:#DC2626; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 100px; }
+    h1 { font-size:18px; margin-bottom:12px; }
+    .toc { font-size:13px; margin-bottom:20px; }
+    .toc a { display:block; color:var(--primary); padding:4px 0; text-decoration:none; }
+    details { border:1px solid var(--border); border-radius:10px; margin-bottom:8px; overflow:hidden; }
+    summary { padding:12px; font-weight:600; font-size:14px; cursor:pointer; background:var(--bg); }
+    .content { padding:12px; font-size:13px; line-height:1.6; color:var(--muted); }
+    .tag { display:inline-block; font-size:10px; padding:2px 6px; border-radius:4px; margin-right:4px; font-weight:600; }
+    .tag-act { background:#DCFCE7; color:var(--act); }
+    .tag-ask { background:#FEF3C7; color:var(--ask); }
+    .tag-dont { background:#FEE2E2; color:var(--dont); }
+    footer { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:375px; padding:16px; background:var(--card); border-top:1px solid var(--border); }
+    .btn { width:100%; min-height:44px; border:none; border-radius:10px; background:var(--primary); color:#fff; font-size:15px; font-weight:600; cursor:pointer; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <h1>Design Rationale</h1>
+    <nav class="toc" aria-label="Mục lục">
+      <a href="#s0">S0 Onboarding</a>
+      <a href="#s1">S1 Kết nối dữ liệu</a>
+      <a href="#s4">S4 Task từ email</a>
+      <a href="#s2">S2 Ưu tiên tuần</a>
+      <a href="#s9">S9 Soạn email</a>
+      <a href="#s6">S6 Recovery</a>
+      <a href="#fb">Feedback 2×2</a>
+    </nav>
+    <details id="s0" open>
+      <summary>S0 Onboarding <span class="tag tag-ask">Ask</span></summary>
+      <div class="content">3 bước progressive disclosure thay form dài — giảm cognitive load lần đầu. User biết rõ AI làm gì / không làm gì trước khi cấp quyền. Nút Bỏ qua và Khám phá trước đảm bảo agency.</div>
+    </details>
+    <details id="s1">
+      <summary>S1 Kết nối dữ liệu <span class="tag tag-ask">Ask</span></summary>
+      <div class="content">Granular consent — toggle từng nguồn, không all-or-nothing. Phạm vi dữ liệu expandable để user đọc trước khi đồng ý. Banner thu hồi quyền tạo trust.</div>
+    </details>
+    <details id="s4">
+      <summary>S4 Task từ email <span class="tag tag-ask">Ask</span></summary>
+      <div class="content">Panel bằng chứng + badge fact/inference vì email có thể nhầm môn. Nút Xem nguồn nổi bật hơn Chấp nhận (implicit system cue). Chấp nhận là Ask vì tác động lịch cá nhân.</div>
+    </details>
+    <details id="s2">
+      <summary>S2 Ưu tiên tuần <span class="tag tag-act">Act</span></summary>
+      <div class="content">Act vì chỉ gợi ý thứ tự — rủi ro thấp, user override bằng kéo thả. Sliders explainability cho thấy tiêu chí ưu tiên. Icon email vs brain phân biệt nguồn.</div>
+    </details>
+    <details id="s9">
+      <summary>S9 Soạn email <span class="tag tag-dont">Don't Act</span> <span class="tag tag-ask">Ask</span></summary>
+      <div class="content">Don't Act gửi email — rủi ro quan hệ giảng viên, khó hoàn tác. Chỉ nháp + checkbox xác nhận + Ask copy. Badge Nháp vs Đã gửi là implicit system feedback.</div>
+    </details>
+    <details id="s6">
+      <summary>S6 Recovery <span class="tag tag-act">Act</span></summary>
+      <div class="content">Structured error feedback → xác nhận hiểu → đề xuất sửa → tiếp tục mục tiêu. Không dead-end. Ghi nhớ sender→môn giúp giảm lỗi lặp. Hậu quả nếu sai: bỏ lỡ deadline thật.</div>
+    </details>
+    <details id="fb">
+      <summary>Feedback 2×2</summary>
+      <div class="content">4 ô bổ sung cho nhau: explicit banner (S→U), form lỗi (U→S), affordance UI (implicit S→U), toast hoàn tác (implicit U→S). Thiếu một ô = thiếu kênh feedback quan trọng.</div>
+    </details>
+    <footer>
+      <button class="btn" data-next="07-demo-path">Xem demo</button>
+    </footer>
+  </div>
+  <script>
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

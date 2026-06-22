@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Gán nhầm môn</title>
+  <style>
+    :root { --primary:#2563EB; --danger:#DC2626; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 120px; position:relative; }
+    .status { background:#FEF2F2; color:var(--danger); padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; }
+    .card { border:2px solid #FECACA; border-radius:12px; padding:16px; margin-bottom:16px; background:#FEF2F2; }
+    .card h2 { font-size:15px; margin-bottom:8px; }
+    .card .current { font-size:14px; margin-bottom:4px; }
+    .callout { background:#FEE2E2; color:var(--danger); padding:10px; border-radius:8px; font-size:13px; font-weight:600; margin-bottom:16px; }
+    .compare { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .compare-col { border:1px solid var(--border); border-radius:8px; padding:10px; font-size:12px; }
+    .compare-col h3 { font-size:12px; margin-bottom:6px; }
+    .compare-col.wrong { border-color:#FECACA; }
+    .compare-col.right { border-color:#86EFAC; background:#F0FDF4; }
+    .highlight { background:#FEF3C7; padding:2px 4px; border-radius:4px; }
+    .actions { display:flex; flex-direction:column; gap:8px; }
+    .btn { min-height:44px; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-danger { background:var(--danger); color:#fff; border:none; }
+    .btn-secondary { background:#fff; border:1px solid var(--border); }
+    .btn-link { background:none; border:none; color:var(--muted); font-size:14px; }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Rationale S6</strong><br>
+      Hậu quả nếu sai: học nhầm môn, bỏ lỡ deadline MATH201. So sánh bằng chứng giúp phát hiện.
+    </div>
+    <div class="status" role="status">Đề xuất có thể sai — cần xác nhận</div>
+    <div class="card">
+      <h2>Nộp Bài tập 3</h2>
+      <p class="current">Hiện tại: <strong>CS101</strong> — 25/06</p>
+      <p class="current">Email nguồn: <span class="highlight">tranthib@university.edu (MATH201)</span></p>
+    </div>
+    <div class="callout">Môn học không khớp email nguồn</div>
+    <div class="compare">
+      <div class="compare-col wrong">
+        <h3>AI gán</h3>
+        <p>CS101</p>
+        <p>GV: Nguyễn Văn A</p>
+      </div>
+      <div class="compare-col right">
+        <h3>Email thực tế</h3>
+        <p>MATH201</p>
+        <p>GV: Trần Thị B</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-danger" data-next="04-error-feedback">Báo sai</button>
+      <button class="btn btn-secondary">Tự sửa</button>
+      <button class="btn btn-link">Bỏ qua (có rủi ro)</button>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>

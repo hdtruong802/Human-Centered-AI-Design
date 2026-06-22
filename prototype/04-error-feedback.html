@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — Báo lỗi</title>
+  <style>
+    :root { --primary:#2563EB; --bg:#F8FAFC; --card:#FFF; --text:#1E293B; --muted:#64748B; --border:#E2E8F0; --rationale-bg:#FFF9E6; --rationale-border:#FCD34D; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+    .phone { max-width:375px; margin:0 auto; min-height:100vh; background:var(--card); padding:16px 16px 120px; position:relative; }
+    h1 { font-size:18px; margin-bottom:8px; }
+    .banner { background:#EFF6FF; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:20px; color:var(--primary); }
+    .radio-group { list-style:none; }
+    .radio-group li { margin-bottom:8px; }
+    .radio-group label { display:flex; align-items:center; gap:10px; padding:12px; border:1px solid var(--border); border-radius:10px; cursor:pointer; font-size:14px; min-height:44px; }
+    .radio-group input { min-width:18px; min-height:18px; }
+    .radio-group input:checked + span, .radio-group label:has(input:checked) { border-color:var(--primary); background:#EFF6FF; }
+    .radio-group label:has(input:checked) { border-color:var(--primary); background:#EFF6FF; }
+    textarea { width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-size:14px; font-family:inherit; min-height:80px; margin:16px 0; }
+    .checkbox-row { display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:20px; }
+    .actions { display:flex; flex-direction:column; gap:8px; }
+    .btn { min-height:44px; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-primary { background:var(--primary); color:#fff; border:none; }
+    .btn-secondary { background:#fff; border:1px solid var(--border); color:var(--muted); }
+    .rationale { position:fixed; top:12px; right:8px; max-width:130px; font-size:11px; background:var(--rationale-bg); border:1px solid var(--rationale-border); border-radius:8px; padding:8px; z-index:100; }
+    :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="rationale" role="note">
+      <strong>Explicit User→System</strong><br>
+      Structured feedback, không chỉ dislike → recovery có hướng cụ thể.
+    </div>
+    <h1>Giúp StudyMate hiểu lỗi</h1>
+    <div class="banner" role="status">Phản hồi của bạn giúp AI sửa ngay, không chỉ ghi nhận</div>
+    <ul class="radio-group">
+      <li><label><input type="radio" name="error" value="subject" checked><span>Sai môn học</span></label></li>
+      <li><label><input type="radio" name="error" value="deadline"><span>Sai deadline</span></label></li>
+      <li><label><input type="radio" name="error" value="notask"><span>Không phải task (chỉ thông báo)</span></label></li>
+      <li><label><input type="radio" name="error" value="unrelated"><span>Email không liên quan học tập</span></label></li>
+      <li><label><input type="radio" name="error" value="other"><span>Khác</span></label></li>
+    </ul>
+    <textarea placeholder="Mô tả thêm: Email này của thầy B, môn MATH201">Email này của thầy B, môn MATH201</textarea>
+    <label class="checkbox-row"><input type="checkbox" checked> Gửi kèm trích email</label>
+    <div class="actions">
+      <button class="btn btn-primary" data-next="04-recovery">Gửi phản hồi</button>
+      <button class="btn btn-secondary" data-next="04-wrong-deadline">Hủy</button>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => window.location.href = btn.getAttribute('data-next') + '.html');
+    });
+  </script>
+</body>
+</html>
